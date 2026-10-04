@@ -7,15 +7,15 @@ export default function ActionPage() {
 
   return (
     <main className="standalone-page">
-      <Link className="back-link" to="/"><ArrowLeft size={16} />Retour au tableau de bord</Link>
+      <Link className="back-link" to="/"><ArrowLeft size={16} />Back to dashboard</Link>
       <div className="standalone-card">
         <span className="standalone-icon"><ClipboardList size={25} /></span>
-        <p className="eyebrow">Module en préparation</p>
+        <p className="eyebrow">Coming soon</p>
         <h1>{title.charAt(0).toUpperCase() + title.slice(1)}</h1>
-        <p>Cette page est prête à recevoir les données et les fonctionnalités de ce module.</p>
+        <p>This area is ready for its future data and features.</p>
         <div className="example-list">
-          <strong>Exemples de données</strong>
-          <span>Exemple 1</span><span>Exemple 2</span><span>Exemple 3</span><span>Exemple 4</span><span>Exemple 5</span>
+          <strong>Planned content</strong>
+          <span>Overview</span><span>Search and filters</span><span>Detailed records</span>
         </div>
       </div>
     </main>

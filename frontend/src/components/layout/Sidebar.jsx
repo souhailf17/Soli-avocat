@@ -1,0 +1,62 @@
+import { ChevronDown, ChevronsLeft, ChevronsRight, Plus, Search } from 'lucide-react'
+import { navigation } from '../../data/navigation'
+import { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+
+export default function Sidebar({ collapsed, onToggle }) {
+  const [openSection, setOpenSection] = useState(null)
+  const { pathname } = useLocation()
+
+  return (
+    <aside className={`sidebar ${collapsed ? 'sidebar--collapsed' : ''}`}>
+      <div className="sidebar__brand">
+        <div className="brand-mark">SA</div>
+        {!collapsed && (
+          <div>
+            <strong>Solution</strong>
+          <span>Legal workspace</span>
+          </div>
+        )}
+      </div>
+
+      <Link className="new-case-button" to="/actions/create-case">
+        <Plus size={18} />
+        {!collapsed && <span>New case</span>}
+      </Link>
+
+      {!collapsed && <p className="sidebar__label">Workspace</p>}
+      <nav className="sidebar__nav" aria-label="Main navigation">
+        {navigation.map(({ label, icon: Icon, items, href }) => (
+          <div className="nav-group" key={label}>
+            {href ? <Link className={`nav-item ${pathname === href ? 'nav-item--active' : ''}`} to={href}>
+              <Icon size={19} strokeWidth={1.8} />
+              {!collapsed && <span>{label}</span>}
+            </Link> : <button className={`nav-item ${items?.some((item) => pathname === item.href) ? 'nav-item--active' : ''}`} type="button" onClick={() => setOpenSection(openSection === label ? null : label)}>
+              <Icon size={19} strokeWidth={1.8} />
+              {!collapsed && <span>{label}</span>}
+              {!collapsed && <ChevronDown className="nav-item__chevron" size={15} />}
+            </button>}
+            {!collapsed && openSection === label && (
+              <div className="nav-subitems">
+                {items.map((item) => <Link to={item.href} key={item.href}><span>{item.label}</span>{item.status === 'planned' && <small>Soon</small>}</Link>)}
+              </div>
+            )}
+          </div>
+        ))}
+      </nav>
+
+      {!collapsed && (
+        <div className="sidebar__footer-card">
+          <div className="footer-card__icon"><Search size={17} /></div>
+          <strong>Need help?</strong>
+          <span>Read the product guide</span>
+          <a href="#help">Open help center →</a>
+        </div>
+      )}
+
+      <button className="sidebar__toggle" type="button" onClick={onToggle} aria-label="Toggle navigation">
+        {collapsed ? <ChevronsRight size={18} /> : <ChevronsLeft size={18} />}
+      </button>
+    </aside>
+  )
+}
