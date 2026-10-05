@@ -1,17 +1,20 @@
 import { ArrowLeft, FolderSearch, Search } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { useLocale } from '../i18n/LocaleContext'
+import LanguageSwitcher from '../components/layout/LanguageSwitcher'
 
 const fields = [
-  { name: 'caseNumber', label: 'Case number', placeholder: 'Enter the case number' },
-  { name: 'client', label: 'Client', placeholder: 'Enter the client name' },
-  { name: 'court', label: 'Court', placeholder: 'Enter the court name' },
-  { name: 'courtReference', label: 'Court reference', placeholder: 'Enter the court reference' },
+  { name: 'caseNumber', label: 'N° de dossier', placeholder: 'Saisissez le numéro du dossier' },
+  { name: 'client', label: 'Client', placeholder: 'Saisissez le nom du client' },
+  { name: 'court', label: 'Tribunal', placeholder: 'Saisissez le nom du tribunal' },
+  { name: 'courtReference', label: 'Référence du tribunal', placeholder: 'Saisissez la référence du tribunal' },
 ]
 
 export default function SuiviPage() {
   const [form, setForm] = useState({})
   const navigate = useNavigate()
+  const { t } = useLocale()
 
   function updateField(event) {
     setForm({ ...form, [event.target.name]: event.target.value })
@@ -24,24 +27,24 @@ export default function SuiviPage() {
 
   return (
     <main className="standalone-page">
-      <Link className="back-link" to="/"><ArrowLeft size={16} />Back to dashboard</Link>
+      <div className="standalone-toolbar"><Link className="back-link" to="/"><ArrowLeft size={16} />{t('Retour au tableau de bord')}</Link><LanguageSwitcher /></div>
       <div className="search-page-card">
         <div className="search-page-heading">
           <span className="standalone-icon"><FolderSearch size={25} /></span>
           <div>
-            <p className="eyebrow">Cases</p>
-            <h1>Track a case</h1>
-            <p>Find a case using any information you have.</p>
+            <p className="eyebrow">{t('Dossiers')}</p>
+            <h1>{t('Suivi des dossiers')}</h1>
+            <p>{t('Recherchez un dossier à partir des informations dont vous disposez.')}</p>
           </div>
         </div>
         <form className="suivi-form" onSubmit={handleSubmit}>
           {fields.map(({ name, label, placeholder }) => (
             <label className="form-field" key={name}>
-              <span>{label}</span>
-              <input name={name} value={form[name] || ''} onChange={updateField} placeholder={placeholder} />
+              <span>{t(label)}</span>
+              <input name={name} value={form[name] || ''} onChange={updateField} placeholder={t(placeholder)} />
             </label>
           ))}
-          <button className="primary-search-button" type="submit"><Search size={18} />Search</button>
+          <button className="primary-search-button" type="submit"><Search size={18} />{t('Rechercher')}</button>
         </form>
       </div>
     </main>
