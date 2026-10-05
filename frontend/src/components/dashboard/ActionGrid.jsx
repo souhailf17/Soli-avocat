@@ -5,7 +5,7 @@ export default function ActionGrid({ onAction }) {
   return (
     <section className="section-block action-section">
       <div className="section-heading">
-        <div><h2>Quick actions</h2><p>Start with the tasks you use most often</p></div>
+        <div><h2>Accès directs</h2><p>Accédez aux tâches que vous utilisez le plus souvent</p></div>
       </div>
       <div className="action-grid">
         {dashboardActions.map(({ label, icon: Icon, href }) => (

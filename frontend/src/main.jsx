@@ -8,7 +8,10 @@ import SuiviResultsPage from './pages/SuiviResultsPage'
 import RecherchePage from './pages/RecherchePage'
 import RechercheResultsPage from './pages/RechercheResultsPage'
 import DossiersPage from './pages/DossiersPage'
+import { DEFAULT_LANGUAGE } from './config/locale'
 import './styles.css'
+
+document.documentElement.lang = DEFAULT_LANGUAGE
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

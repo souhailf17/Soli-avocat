@@ -5,8 +5,8 @@ export default function QuickActions({ onAction }) {
   return (
     <section className="section-block">
       <div className="section-heading">
-        <div><h2>Favorites</h2><p>Your most frequently used services</p></div>
-        <button className="text-button" type="button">Manage favorites <ArrowUpRight size={15} /></button>
+        <div><h2>Favoris</h2><p>Vos services les plus utilisés</p></div>
+        <button className="text-button" type="button">Gérer les favoris <ArrowUpRight size={15} /></button>
       </div>
       <div className="quick-actions">
         {dashboardActions.slice(0, 4).map(({ label, icon: Icon, href }) => (

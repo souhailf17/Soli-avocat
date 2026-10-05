@@ -8,6 +8,7 @@ import CalendarWidget from '../components/dashboard/CalendarWidget'
 import AttentionWidget from '../components/dashboard/AttentionWidget'
 import ActionGrid from '../components/dashboard/ActionGrid'
 import { categoryCards } from '../data/navigation'
+import { formatLongDate } from '../config/locale'
 import { useState } from 'react'
 
 export default function HomePage() {
@@ -22,16 +23,16 @@ export default function HomePage() {
       <div className={`main-area ${collapsed ? 'main-area--expanded' : ''}`}>
         <Topbar onMobileMenu={() => setMobileOpen(true)} />
         <main className="main-content">
-          <div className="breadcrumb"><span>Home</span><b>/</b><strong>Dashboard</strong></div>
-          <div className="page-intro"><div><p className="eyebrow">Monday, September 21, 2026</p><h1>Hello Marie <span>👋</span></h1><p>Here is a clear overview of your legal work.</p></div><button className="outline-button" type="button"><BriefcaseBusiness size={17} />My activity</button></div>
+          <div className="breadcrumb"><span>Accueil</span><b>/</b><strong>Tableau de bord</strong></div>
+          <div className="page-intro"><div><p className="eyebrow">{formatLongDate()}</p><h1>Bonjour Marie <span>👋</span></h1><p>Voici un aperçu de votre activité juridique.</p></div><button className="outline-button" type="button"><BriefcaseBusiness size={17} />Mon activité</button></div>
           <section className="stats-grid">
-            <StatCard label="Active cases" value="248" change="+12%" note="this month" icon={FolderOpen} tone="indigo" />
-            <StatCard label="Overdue tasks" value="12" change="-3" note="since yesterday" icon={Clock3} tone="orange" />
-            <StatCard label="Hearings this week" value="8" change="+2" note="from last week" icon={Gavel} tone="violet" />
-            <StatCard label="Unpaid invoices" value="5" change="-1" note="from last week" icon={ReceiptText} tone="red" />
+            <StatCard label="Dossiers actifs" value="248" change="+12%" note="ce mois-ci" icon={FolderOpen} tone="indigo" />
+            <StatCard label="Tâches en retard" value="12" change="-3" note="depuis hier" icon={Clock3} tone="orange" />
+            <StatCard label="Audiences cette semaine" value="8" change="+2" note="depuis la semaine dernière" icon={Gavel} tone="violet" />
+            <StatCard label="Factures impayées" value="5" change="-1" note="depuis la semaine dernière" icon={ReceiptText} tone="red" />
           </section>
           <ActionGrid onAction={(href) => navigate(href)} />
-          <section className="section-block"><div className="section-heading"><div><h2>Work areas</h2><p>Browse the main parts of the application</p></div><button className="text-button" type="button">Customize <FileText size={15} /></button></div><div className="category-grid">{categoryCards.map((card) => <CategoryCard {...card} key={card.title} />)}</div></section>
+          <section className="section-block"><div className="section-heading"><div><h2>Espaces de travail</h2><p>Parcourez les principales fonctions de l’application</p></div><button className="text-button" type="button">Personnaliser <FileText size={15} /></button></div><div className="category-grid">{categoryCards.map((card) => <CategoryCard {...card} key={card.title} />)}</div></section>
           <section className="widgets-grid"><CalendarWidget /><AttentionWidget /></section>
         </main>
       </div>

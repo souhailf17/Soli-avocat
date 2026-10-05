@@ -4,39 +4,39 @@ import { useState } from 'react'
 
 const groups = [
   {
-    title: 'Case',
+    title: 'Dossier',
     fields: [
-      ['client', 'Client', 'Enter the client name'],
-      ['opponent', 'Opposing party', 'Enter the opposing party'],
-      ['clientReference', 'Client reference', 'Enter the client reference'],
-      ['identityNumber', 'Identity number', 'Enter the identity number'],
+      ['client', 'Client', 'Saisissez le nom du client'],
+      ['opponent', 'Adversaire', 'Saisissez le nom de l’adversaire'],
+      ['clientReference', 'Référence client', 'Saisissez la référence client'],
+      ['identityNumber', 'Numéro d’identité', 'Saisissez le numéro d’identité'],
     ],
   },
   {
     title: 'Documents',
     fields: [
-      ['documentType', 'Document type', 'Select a type'],
-      ['judgmentNumber', 'Judgment number', 'Enter the judgment number'],
-      ['notificationNumber', 'Notification number', 'Enter the notification number'],
-      ['enforcementNumber', 'Enforcement number', 'Enter the enforcement number'],
+      ['documentType', 'Type de document', 'Sélectionnez un type'],
+      ['judgmentNumber', 'N° de jugement', 'Saisissez le numéro du jugement'],
+      ['notificationNumber', 'N° de notification', 'Saisissez le numéro de notification'],
+      ['enforcementNumber', 'N° d’exécution', 'Saisissez le numéro d’exécution'],
     ],
   },
   {
-    title: 'Court',
-    fields: [['courtReference', 'Court reference', 'Enter the court reference']],
+    title: 'Tribunal',
+    fields: [['courtReference', 'Référence du tribunal', 'Saisissez la référence du tribunal']],
   },
   {
-    title: 'Payment',
+    title: 'Paiement',
     fields: [
-      ['checkNumber', 'Check number', 'Enter the check number'],
-      ['amount', 'Amount', 'Enter the amount'],
+      ['checkNumber', 'N° de chèque', 'Saisissez le numéro du chèque'],
+      ['amount', 'Montant', 'Saisissez le montant'],
     ],
   },
 ]
 
 export default function RecherchePage() {
   const [form, setForm] = useState({})
-  const [selectedGroup, setSelectedGroup] = useState('Case')
+  const [selectedGroup, setSelectedGroup] = useState('Dossier')
   const navigate = useNavigate()
   const activeGroup = groups.find((group) => group.title === selectedGroup) || groups[0]
 
@@ -51,28 +51,28 @@ export default function RecherchePage() {
 
   return (
     <main className="standalone-page advanced-search-page">
-      <Link className="back-link" to="/"><ArrowLeft size={16} />Back to dashboard</Link>
+      <Link className="back-link" to="/"><ArrowLeft size={16} />Retour au tableau de bord</Link>
       <div className="advanced-search-header">
-        <div><span className="standalone-icon"><FileSearch size={25} /></span><div><p className="eyebrow">Cases</p><h1>Advanced search</h1><p>Use one or more criteria to find a case.</p></div></div>
+        <div><span className="standalone-icon"><FileSearch size={25} /></span><div><p className="eyebrow">Dossiers</p><h1>Recherche avancée</h1><p>Utilisez un ou plusieurs critères pour retrouver un dossier.</p></div></div>
       </div>
       <form onSubmit={submit}>
         <div className="search-workspace">
-          <aside className="search-filter-menu" aria-label="Search categories">
-            <p>Search category</p>
+          <aside className="search-filter-menu" aria-label="Catégories de recherche">
+            <p>Catégorie de recherche</p>
             {groups.map((group) => {
               const filledCount = group.fields.filter(([name]) => form[name]).length
-              return <button className={selectedGroup === group.title ? 'search-filter-menu__item search-filter-menu__item--active' : 'search-filter-menu__item'} type="button" key={group.title} onClick={() => setSelectedGroup(group.title)}><span>{group.title}</span><small>{filledCount ? `${filledCount} completed` : `${group.fields.length} fields`}</small></button>
+              return <button className={selectedGroup === group.title ? 'search-filter-menu__item search-filter-menu__item--active' : 'search-filter-menu__item'} type="button" key={group.title} onClick={() => setSelectedGroup(group.title)}><span>{group.title}</span><small>{filledCount ? `${filledCount} renseigné${filledCount > 1 ? 's' : ''}` : `${group.fields.length} champs`}</small></button>
             })}
           </aside>
           <section className="search-group search-group--active">
-            <div className="search-group__heading"><span>{activeGroup.title}</span><small>{activeGroup.fields.length} available fields</small></div>
+            <div className="search-group__heading"><span>{activeGroup.title}</span><small>{activeGroup.fields.length} champs disponibles</small></div>
             <div className="advanced-fields">
               {activeGroup.fields.map(([name, label, placeholder]) => (
                 <label className="form-field" key={name}>
                   <span>{label}</span>
                   {name === 'documentType' ? (
                     <select name={name} value={form[name] || ''} onChange={updateField}>
-                      <option value="">Select a type</option><option value="Case">Case</option><option value="Judgment">Judgment</option><option value="Notification">Notification</option><option value="Enforcement">Enforcement</option>
+                      <option value="">Sélectionnez un type</option><option value="Dossier">Dossier</option><option value="Jugement">Jugement</option><option value="Notification">Notification</option><option value="Exécution">Exécution</option>
                     </select>
                   ) : <input name={name} type="text" value={form[name] || ''} onChange={updateField} placeholder={placeholder} />}
                 </label>
@@ -80,7 +80,7 @@ export default function RecherchePage() {
             </div>
           </section>
         </div>
-        <div className="advanced-search-actions"><button className="secondary-button" type="button" onClick={() => setForm({})}>Reset</button><button className="primary-search-button" type="submit"><Search size={18} />Search</button></div>
+        <div className="advanced-search-actions"><button className="secondary-button" type="button" onClick={() => setForm({})}>Réinitialiser</button><button className="primary-search-button" type="submit"><Search size={18} />Rechercher</button></div>
       </form>
     </main>
   )
