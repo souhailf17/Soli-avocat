@@ -1,6 +1,8 @@
 import { ArrowLeft, FileSearch, Plus, Users, Bell, Gavel, FileCheck2, Zap } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
+import { useLocale } from '../i18n/LocaleContext'
+import LanguageSwitcher from '../components/layout/LanguageSwitcher'
 
 const dossier = [
   ['Réf. interne', 'SC-2026-0048'], ['Type', 'Affaire civile'], ['N° de dossier', 'DOS-2026-0142'],
@@ -59,24 +61,27 @@ const sections = [
 
 function SearchSummary({ criteria }) {
   const activeCriteria = Object.entries(criteria || {}).filter(([, value]) => value)
+  const { t } = useLocale()
   if (!activeCriteria.length) return null
 
   return (
     <div className="criteria-summary">
-      <span>Critères de recherche :</span>
-      {activeCriteria.map(([key, value]) => <strong key={key}>{criteriaLabels[key] || key} : {value}</strong>)}
+      <span>{t('Critères de recherche :')}</span>
+      {activeCriteria.map(([key, value]) => <strong key={key}>{t(criteriaLabels[key] || key)} : {value}</strong>)}
     </div>
   )
 }
 
 function RepeatableSection({ section }) {
+  const { t } = useLocale()
+
   return (
     <section className="result-section result-section--open">
-      <div className="result-section__static-header"><span className="result-section__number"><FileCheck2 size={15} /></span><span><strong>{section.title}</strong><small>{section.rows.length} éléments</small></span></div>
+      <div className="result-section__static-header"><span className="result-section__number"><FileCheck2 size={15} /></span><span><strong>{t(section.title)}</strong><small>{t(section.rows.length === 1 ? 'recordsCount' : 'recordsCountPlural', { count: section.rows.length })}</small></span></div>
       <div className="table-scroll">
         <table className="results-table">
-          <thead><tr>{section.columns.map((column) => <th key={column}>{column}</th>)}</tr></thead>
-          <tbody>{section.rows.map((row, rowIndex) => <tr key={`${section.title}-${rowIndex}`}>{row.map((value, index) => <td key={`${value}-${index}`}>{value}</td>)}</tr>)}</tbody>
+          <thead><tr>{section.columns.map((column) => <th key={column}>{t(column)}</th>)}</tr></thead>
+          <tbody>{section.rows.map((row, rowIndex) => <tr key={`${section.title}-${rowIndex}`}>{row.map((value, index) => <td key={`${value}-${index}`}>{t(value)}</td>)}</tr>)}</tbody>
         </table>
       </div>
     </section>
@@ -84,22 +89,26 @@ function RepeatableSection({ section }) {
 }
 
 function DossierTable() {
+  const { t } = useLocale()
+
   return (
     <div className="table-scroll">
       <table className="results-table dossier-table">
-        <thead><tr>{dossier.map(([label]) => <th key={label}>{label}</th>)}</tr></thead>
-        <tbody><tr>{dossier.map(([label, value]) => <td key={label}>{value}</td>)}</tr></tbody>
+        <thead><tr>{dossier.map(([label]) => <th key={label}>{t(label)}</th>)}</tr></thead>
+        <tbody><tr>{dossier.map(([label, value]) => <td key={label}>{t(value)}</td>)}</tr></tbody>
       </table>
     </div>
   )
 }
 
 function AdversariesTable() {
+  const { t } = useLocale()
+
   return (
     <div className="table-scroll">
       <table className="results-table adversaries-table">
-        <thead><tr><th>Adversaire</th><th>Type</th><th>Contact</th><th>Statut</th></tr></thead>
-        <tbody>{adversaries.map((adversary) => <tr key={adversary.name}><td>{adversary.name}</td><td>{adversary.type}</td><td>{adversary.contact}</td><td><span className="status-badge">{adversary.status}</span></td></tr>)}</tbody>
+        <thead><tr>{['Adversaire', 'Type', 'Contact', 'Statut'].map((label) => <th key={label}>{t(label)}</th>)}</tr></thead>
+        <tbody>{adversaries.map((adversary) => <tr key={adversary.name}><td>{t(adversary.name)}</td><td>{t(adversary.type)}</td><td>{t(adversary.contact)}</td><td><span className="status-badge">{t(adversary.status)}</span></td></tr>)}</tbody>
       </table>
     </div>
   )
@@ -109,26 +118,27 @@ export default function SuiviResultsPage() {
   const { state } = useLocation()
   const [selectedPanel, setSelectedPanel] = useState('fiche')
   const selectedSection = sections.find((section) => section.key === selectedPanel)
+  const { t } = useLocale()
 
   return (
     <main className="standalone-page results-page">
-      <Link className="back-link" to="/actions/suivi"><ArrowLeft size={16} />Modifier la recherche</Link>
+      <div className="standalone-toolbar"><Link className="back-link" to="/actions/suivi"><ArrowLeft size={16} />{t('Modifier la recherche')}</Link><LanguageSwitcher /></div>
       <div className="results-header">
-        <div><p className="eyebrow">Suivi des dossiers / Résultat</p><h1>Détails du dossier</h1><p>Consultez la synthèse du dossier et les éléments juridiques associés.</p></div>
-        <span className="results-count"><FileSearch size={17} />1 dossier trouvé</span>
+        <div><p className="eyebrow">{t('Suivi des dossiers / Résultat')}</p><h1>{t('Détails du dossier')}</h1><p>{t('Consultez la synthèse du dossier et les éléments juridiques associés.')}</p></div>
+        <span className="results-count"><FileSearch size={17} />{t('1 dossier trouvé')}</span>
       </div>
       <SearchSummary criteria={state?.criteria} />
 
       <div className="results-layout">
-        <aside className="results-menu" aria-label="Sections du dossier">
-          <p>Contenu du dossier</p>
-          <button className={selectedPanel === 'fiche' ? 'results-menu__item results-menu__item--active' : 'results-menu__item'} type="button" onClick={() => setSelectedPanel('fiche')}><FileSearch size={17} /><span>Fiche du dossier<small>Informations générales</small></span></button>
-          <button className={selectedPanel === 'adversaires' ? 'results-menu__item results-menu__item--active' : 'results-menu__item'} type="button" onClick={() => setSelectedPanel('adversaires')}><Users size={17} /><span>Adversaires<small>{adversaries.length} éléments</small></span></button>
-          {sections.map((section) => <button className={selectedPanel === section.key ? 'results-menu__item results-menu__item--active' : 'results-menu__item'} type="button" key={section.key} onClick={() => setSelectedPanel(section.key)}><section.icon size={17} /><span>{section.title}<small>{section.rows.length} éléments</small></span></button>)}
+        <aside className="results-menu" aria-label={t('Sections du dossier')}>
+          <p>{t('Contenu du dossier')}</p>
+          <button className={selectedPanel === 'fiche' ? 'results-menu__item results-menu__item--active' : 'results-menu__item'} type="button" onClick={() => setSelectedPanel('fiche')}><FileSearch size={17} /><span>{t('Fiche du dossier')}<small>{t('Informations générales')}</small></span></button>
+          <button className={selectedPanel === 'adversaires' ? 'results-menu__item results-menu__item--active' : 'results-menu__item'} type="button" onClick={() => setSelectedPanel('adversaires')}><Users size={17} /><span>{t('Adversaires')}<small>{t(adversaries.length === 1 ? 'recordsCount' : 'recordsCountPlural', { count: adversaries.length })}</small></span></button>
+          {sections.map((section) => <button className={selectedPanel === section.key ? 'results-menu__item results-menu__item--active' : 'results-menu__item'} type="button" key={section.key} onClick={() => setSelectedPanel(section.key)}><section.icon size={17} /><span>{t(section.title)}<small>{t(section.rows.length === 1 ? 'recordsCount' : 'recordsCountPlural', { count: section.rows.length })}</small></span></button>)}
         </aside>
         <div className="results-panel">
-          {selectedPanel === 'fiche' && <section className="result-section result-section--open dossier-summary"><div className="result-section__static-header"><span className="result-section__number">01</span><span><strong>Fiche du dossier</strong><small>Informations générales du dossier sélectionné</small></span></div><DossierTable /></section>}
-          {selectedPanel === 'adversaires' && <section className="result-section result-section--open related-parties"><div className="result-section__static-header"><span className="result-section__number"><Users size={15} /></span><span><strong>Adversaires</strong><small>{adversaries.length} parties liées à ce dossier</small></span><button className="small-action" type="button"><Plus size={14} />Ajouter</button></div><AdversariesTable /></section>}
+          {selectedPanel === 'fiche' && <section className="result-section result-section--open dossier-summary"><div className="result-section__static-header"><span className="result-section__number">01</span><span><strong>{t('Fiche du dossier')}</strong><small>{t('Informations générales du dossier sélectionné')}</small></span></div><DossierTable /></section>}
+          {selectedPanel === 'adversaires' && <section className="result-section result-section--open related-parties"><div className="result-section__static-header"><span className="result-section__number"><Users size={15} /></span><span><strong>{t('Adversaires')}</strong><small>{t(adversaries.length === 1 ? 'partiesLinked' : 'partiesLinkedPlural', { count: adversaries.length })}</small></span><button className="small-action" type="button"><Plus size={14} />{t('Ajouter')}</button></div><AdversariesTable /></section>}
           {selectedSection && <RepeatableSection section={selectedSection} />}
         </div>
       </div>

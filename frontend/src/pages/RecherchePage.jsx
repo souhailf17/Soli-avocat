@@ -1,6 +1,8 @@
 import { ArrowLeft, FileSearch, Search } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { useLocale } from '../i18n/LocaleContext'
+import LanguageSwitcher from '../components/layout/LanguageSwitcher'
 
 const groups = [
   {
@@ -39,6 +41,7 @@ export default function RecherchePage() {
   const [selectedGroup, setSelectedGroup] = useState('Dossier')
   const navigate = useNavigate()
   const activeGroup = groups.find((group) => group.title === selectedGroup) || groups[0]
+  const { t } = useLocale()
 
   function updateField(event) {
     setForm({ ...form, [event.target.name]: event.target.value })
@@ -51,36 +54,36 @@ export default function RecherchePage() {
 
   return (
     <main className="standalone-page advanced-search-page">
-      <Link className="back-link" to="/"><ArrowLeft size={16} />Retour au tableau de bord</Link>
+      <div className="standalone-toolbar"><Link className="back-link" to="/"><ArrowLeft size={16} />{t('Retour au tableau de bord')}</Link><LanguageSwitcher /></div>
       <div className="advanced-search-header">
-        <div><span className="standalone-icon"><FileSearch size={25} /></span><div><p className="eyebrow">Dossiers</p><h1>Recherche avancée</h1><p>Utilisez un ou plusieurs critères pour retrouver un dossier.</p></div></div>
+        <div><span className="standalone-icon"><FileSearch size={25} /></span><div><p className="eyebrow">{t('Dossiers')}</p><h1>{t('Recherche avancée')}</h1><p>{t('Utilisez un ou plusieurs critères pour retrouver un dossier.')}</p></div></div>
       </div>
       <form onSubmit={submit}>
         <div className="search-workspace">
-          <aside className="search-filter-menu" aria-label="Catégories de recherche">
-            <p>Catégorie de recherche</p>
+          <aside className="search-filter-menu" aria-label={t('Catégories de recherche')}>
+            <p>{t('Catégorie de recherche')}</p>
             {groups.map((group) => {
               const filledCount = group.fields.filter(([name]) => form[name]).length
-              return <button className={selectedGroup === group.title ? 'search-filter-menu__item search-filter-menu__item--active' : 'search-filter-menu__item'} type="button" key={group.title} onClick={() => setSelectedGroup(group.title)}><span>{group.title}</span><small>{filledCount ? `${filledCount} renseigné${filledCount > 1 ? 's' : ''}` : `${group.fields.length} champs`}</small></button>
+              return <button className={selectedGroup === group.title ? 'search-filter-menu__item search-filter-menu__item--active' : 'search-filter-menu__item'} type="button" key={group.title} onClick={() => setSelectedGroup(group.title)}><span>{t(group.title)}</span><small>{filledCount ? t(filledCount > 1 ? 'fieldsCompletedPlural' : 'fieldsCompleted', { count: filledCount }) : t('fieldsCount', { count: group.fields.length })}</small></button>
             })}
           </aside>
           <section className="search-group search-group--active">
-            <div className="search-group__heading"><span>{activeGroup.title}</span><small>{activeGroup.fields.length} champs disponibles</small></div>
+            <div className="search-group__heading"><span>{t(activeGroup.title)}</span><small>{t('fieldsAvailable', { count: activeGroup.fields.length })}</small></div>
             <div className="advanced-fields">
               {activeGroup.fields.map(([name, label, placeholder]) => (
                 <label className="form-field" key={name}>
-                  <span>{label}</span>
+                  <span>{t(label)}</span>
                   {name === 'documentType' ? (
                     <select name={name} value={form[name] || ''} onChange={updateField}>
-                      <option value="">Sélectionnez un type</option><option value="Dossier">Dossier</option><option value="Jugement">Jugement</option><option value="Notification">Notification</option><option value="Exécution">Exécution</option>
+                      <option value="">{t('Sélectionnez un type')}</option><option value="Dossier">{t('Dossier')}</option><option value="Jugement">{t('Jugement')}</option><option value="Notification">{t('Notification')}</option><option value="Exécution">{t('Exécution')}</option>
                     </select>
-                  ) : <input name={name} type="text" value={form[name] || ''} onChange={updateField} placeholder={placeholder} />}
+                  ) : <input name={name} type="text" value={form[name] || ''} onChange={updateField} placeholder={t(placeholder)} />}
                 </label>
               ))}
             </div>
           </section>
         </div>
-        <div className="advanced-search-actions"><button className="secondary-button" type="button" onClick={() => setForm({})}>Réinitialiser</button><button className="primary-search-button" type="submit"><Search size={18} />Rechercher</button></div>
+        <div className="advanced-search-actions"><button className="secondary-button" type="button" onClick={() => setForm({})}>{t('Réinitialiser')}</button><button className="primary-search-button" type="submit"><Search size={18} />{t('Rechercher')}</button></div>
       </form>
     </main>
   )

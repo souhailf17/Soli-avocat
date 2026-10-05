@@ -1,6 +1,8 @@
 import { ArrowLeft, FolderSearch, Search } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { useLocale } from '../i18n/LocaleContext'
+import LanguageSwitcher from '../components/layout/LanguageSwitcher'
 
 const fields = [
   { name: 'caseNumber', label: 'N° de dossier', placeholder: 'Saisissez le numéro du dossier' },
@@ -12,6 +14,7 @@ const fields = [
 export default function SuiviPage() {
   const [form, setForm] = useState({})
   const navigate = useNavigate()
+  const { t } = useLocale()
 
   function updateField(event) {
     setForm({ ...form, [event.target.name]: event.target.value })
@@ -24,24 +27,24 @@ export default function SuiviPage() {
 
   return (
     <main className="standalone-page">
-      <Link className="back-link" to="/"><ArrowLeft size={16} />Retour au tableau de bord</Link>
+      <div className="standalone-toolbar"><Link className="back-link" to="/"><ArrowLeft size={16} />{t('Retour au tableau de bord')}</Link><LanguageSwitcher /></div>
       <div className="search-page-card">
         <div className="search-page-heading">
           <span className="standalone-icon"><FolderSearch size={25} /></span>
           <div>
-            <p className="eyebrow">Dossiers</p>
-            <h1>Suivi des dossiers</h1>
-            <p>Recherchez un dossier à partir des informations dont vous disposez.</p>
+            <p className="eyebrow">{t('Dossiers')}</p>
+            <h1>{t('Suivi des dossiers')}</h1>
+            <p>{t('Recherchez un dossier à partir des informations dont vous disposez.')}</p>
           </div>
         </div>
         <form className="suivi-form" onSubmit={handleSubmit}>
           {fields.map(({ name, label, placeholder }) => (
             <label className="form-field" key={name}>
-              <span>{label}</span>
-              <input name={name} value={form[name] || ''} onChange={updateField} placeholder={placeholder} />
+              <span>{t(label)}</span>
+              <input name={name} value={form[name] || ''} onChange={updateField} placeholder={t(placeholder)} />
             </label>
           ))}
-          <button className="primary-search-button" type="submit"><Search size={18} />Rechercher</button>
+          <button className="primary-search-button" type="submit"><Search size={18} />{t('Rechercher')}</button>
         </form>
       </div>
     </main>
